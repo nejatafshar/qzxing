@@ -21,7 +21,9 @@ CONFIG += c++17
 DEFINES += QZXING_LIBRARY \
         ZXING_ICONV_CONST \
         DISABLE_LIBRARY_FEATURES
-		 
+
+DEFINES += __STDC_LIMIT_MACROS
+
 INCLUDEPATH  += $$PWD \
                 $$PWD/zxing
 
