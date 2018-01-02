@@ -186,7 +186,7 @@ Mode Encoder::chooseMode(const std::string& content, const std::string& encoding
 
 //bool Encoder::isOnlyDoubleByteKanji(const std::string& content)
 //{
-//    std::vector<byte> bytes;
+//    std::vector<Byte> bytes;
 //    try {
 //        bytes = content.getBytes("Shift_JIS");
 //    } catch (UnsupportedEncodingException ignored) {
@@ -375,11 +375,11 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
                     numDataBytesInBlock, numEcBytesInBlock);
 
         int size = numDataBytesInBlock[0];
-        std::vector<byte> dataBytes;
+        std::vector<Byte> dataBytes;
         dataBytes.resize(size);
         bits.toBytes(8*dataBytesOffset, dataBytes, 0, size);
-        ArrayRef<byte> ecBytes = generateECBytes(dataBytes, numEcBytesInBlock[0]);
-        blocks.push_back(BlockPair(ArrayRef<byte>(dataBytes.data(), dataBytes.size()),ecBytes)); //?? please revisit
+        ArrayRef<Byte> ecBytes = generateECBytes(dataBytes, numEcBytesInBlock[0]);
+        blocks.push_back(BlockPair(ArrayRef<Byte>(dataBytes.data(), dataBytes.size()),ecBytes)); //?? please revisit
 
         maxNumDataBytes = max(maxNumDataBytes, size);
         maxNumEcBytes = max(maxNumEcBytes, (int)ecBytes->size());
@@ -394,7 +394,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     // First, place data blocks.
     for (int i = 0; i < maxNumDataBytes; i++) {
         for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
-            ArrayRef<byte> dataBytes = it->getDataBytes();
+            ArrayRef<Byte> dataBytes = it->getDataBytes();
             if (i < dataBytes.array_->size()) {
                 result->appendBits(dataBytes[i], 8);  ///????? are we sure?
             }
@@ -403,7 +403,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     // Then, place error correction blocks.
     for (int i = 0; i < maxNumEcBytes; i++) {
         for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
-            ArrayRef<byte> ecBytes = it->getErrorCorrectionBytes();
+            ArrayRef<Byte> ecBytes = it->getErrorCorrectionBytes();
             if (i < ecBytes.array_->size()) {
                 result->appendBits(ecBytes[i], 8);
             }
@@ -421,15 +421,15 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     return result;
 }
 
-ArrayRef<byte> Encoder::generateECBytes(const std::vector<byte>& dataBytes, int numEcBytesInBlock)
+ArrayRef<Byte> Encoder::generateECBytes(const std::vector<Byte>& dataBytes, int numEcBytesInBlock)
 {
     int numDataBytes = dataBytes.size();
-    std::vector<byte> dataBytesCopy(dataBytes);
+    std::vector<Byte> dataBytesCopy(dataBytes);
 
     zxing::ReedSolomonEncoder encoder(GenericGF::QR_CODE_FIELD_256);
     encoder.encode(dataBytesCopy, numEcBytesInBlock);
 
-    ArrayRef<byte> ecBytes(numEcBytesInBlock);
+    ArrayRef<Byte> ecBytes(numEcBytesInBlock);
     for (int i = 0; i < numEcBytesInBlock; i++) {
         ecBytes[i] = dataBytesCopy[numDataBytes + i];
     }
@@ -538,7 +538,7 @@ void Encoder::appendAlphanumericBytes(const std::string& content, BitArray& bits
 void Encoder::append8BitBytes(const std::string& content, BitArray& bits, const std::string& /*encoding*/)
 {
     // For now we will suppose that all the encoding has been handled by std::string class.
-    //    byte[] bytes;
+    //    Byte[] bytes;
     //    try {
     //        bytes = content.getBytes(encoding);
     //    } catch (UnsupportedEncodingException uee) {

@@ -43,7 +43,7 @@ public:
   BitMatrixParser(Ref<BitMatrix> bitMatrix);
   Ref<FormatInformation> readFormatInformation();
   Version *readVersion();
-  ArrayRef<byte> readCodewords();
+  ArrayRef<Byte> readCodewords();
   void remask();
   void setMirror(boolean mirror);
   void mirror();

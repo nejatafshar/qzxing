@@ -57,11 +57,11 @@ namespace {int GB2312_SUBSET = 1;}
 void DecodedBitStreamParser::append(std::string &result,
                                     string const& in,
                                     const char *src) {
-    append(result, (byte const*)in.c_str(), in.length(), src);
+    append(result, (Byte const*)in.c_str(), in.length(), src);
 }
 
 void DecodedBitStreamParser::append(std::string &result,
-                                    const byte *bufIn,
+                                    const Byte *bufIn,
                                     size_t nIn,
                                     const char *src) {
 #ifndef NO_ICONV
@@ -119,7 +119,7 @@ void DecodedBitStreamParser::decodeHanziSegment(Ref<BitSource> bits_,
     // Each character will require 2 bytes. Read the characters as 2-byte pairs
     // and decode as GB2312 afterwards
     size_t nBytes = 2 * count;
-    byte* buffer = new byte[nBytes];
+    Byte* buffer = new Byte[nBytes];
     int offset = 0;
     while (count > 0) {
         // Each 13 bits encodes a 2-byte character
@@ -132,8 +132,8 @@ void DecodedBitStreamParser::decodeHanziSegment(Ref<BitSource> bits_,
             // In the 0xB0A1 to 0xFAFE range
             assembledTwoBytes += 0x0A6A1;
         }
-        buffer[offset] = (byte) ((assembledTwoBytes >> 8) & 0xFF);
-        buffer[offset + 1] = (byte) (assembledTwoBytes & 0xFF);
+        buffer[offset] = (Byte) ((assembledTwoBytes >> 8) & 0xFF);
+        buffer[offset + 1] = (Byte) (assembledTwoBytes & 0xFF);
         offset += 2;
         count--;
     }
@@ -153,7 +153,7 @@ void DecodedBitStreamParser::decodeKanjiSegment(Ref<BitSource> bits, std::string
     // Each character will require 2 bytes. Read the characters as 2-byte pairs
     // and decode as Shift_JIS afterwards
     size_t nBytes = 2 * count;
-    byte* buffer = new byte[nBytes];
+    Byte* buffer = new Byte[nBytes];
     int offset = 0;
     while (count > 0) {
         // Each 13 bits encodes a 2-byte character
@@ -167,8 +167,8 @@ void DecodedBitStreamParser::decodeKanjiSegment(Ref<BitSource> bits, std::string
             // In the 0xE040 to 0xEBBF range
             assembledTwoBytes += 0x0C140;
         }
-        buffer[offset] = (byte)(assembledTwoBytes >> 8);
-        buffer[offset + 1] = (byte)assembledTwoBytes;
+        buffer[offset] = (Byte)(assembledTwoBytes >> 8);
+        buffer[offset + 1] = (Byte)assembledTwoBytes;
         offset += 2;
         count--;
     }
@@ -186,7 +186,7 @@ std::string DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
                                                       string& result,
                                                       int count,
                                                       CharacterSetECI const * currentCharacterSetECI,
-                                                      ArrayRef< ArrayRef<byte> >& byteSegments,
+                                                      ArrayRef< ArrayRef<Byte> >& byteSegments,
                                                       Hashtable const& hints) {
     int nBytes = count;
     BitSource& bits (*bits_);
@@ -195,10 +195,10 @@ std::string DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
         throw FormatException();
     }
 
-    ArrayRef<byte> bytes_ (count);
-    byte* readBytes = &(*bytes_)[0];
+    ArrayRef<Byte> bytes_ (count);
+    Byte* readBytes = &(*bytes_)[0];
     for (int i = 0; i < count; i++) {
-        readBytes[i] = (byte) bits.readBits(8);
+        readBytes[i] = (Byte) bits.readBits(8);
     }
     string encoding;
     if (currentCharacterSetECI == 0) {
@@ -223,7 +223,7 @@ std::string DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
 
 void DecodedBitStreamParser::decodeNumericSegment(Ref<BitSource> bits, std::string &result, int count) {
     int nBytes = count;
-    byte* bytes = new byte[nBytes];
+    Byte* bytes = new Byte[nBytes];
     int i = 0;
     // Read three digits at a time
     while (count >= 3) {
@@ -319,7 +319,7 @@ void DecodedBitStreamParser::decodeAlphanumericSegment(Ref<BitSource> bits_,
                     r << s[i++];
                 } else {
                     // In alpha mode, % should be converted to FNC1 separator 0x1D
-                    r << (byte)0x1D;
+                    r << (Byte)0x1D;
                 }
             }
         }
@@ -350,7 +350,7 @@ int parseECIValue(BitSource& bits) {
 }
 
 Ref<DecoderResult>
-DecodedBitStreamParser::decode(ArrayRef<byte> bytes,
+DecodedBitStreamParser::decode(ArrayRef<Byte> bytes,
                                Version* version,
                                ErrorCorrectionLevel const& ecLevel,
                                Hashtable const& hints) {
@@ -358,7 +358,7 @@ DecodedBitStreamParser::decode(ArrayRef<byte> bytes,
     BitSource& bits (*bits_);
     string result;
     result.reserve(50);
-    ArrayRef< ArrayRef<byte> > byteSegments (0);
+    ArrayRef< ArrayRef<Byte> > byteSegments (0);
     const CharacterSetECI* currentCharacterSetECI = 0;
     string charSet = "";
     try {

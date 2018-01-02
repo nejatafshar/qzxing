@@ -28,21 +28,21 @@ namespace zxing {
 InvertedLuminanceSource::InvertedLuminanceSource(Ref<LuminanceSource> const& delegate_)
     : Super(delegate_->getWidth(), delegate_->getHeight()), delegate(delegate_) {}  
 
-ArrayRef<byte> InvertedLuminanceSource::getRow(int y, ArrayRef<byte> row) const {
+ArrayRef<Byte> InvertedLuminanceSource::getRow(int y, ArrayRef<Byte> row) const {
   row = delegate->getRow(y, row);
   int width = getWidth();
   for (int i = 0; i < width; i++) {
-    row[i] = (byte) (255 - (row[i] & 0xFF));
+    row[i] = (Byte) (255 - (row[i] & 0xFF));
   }
   return row;
 }
 
-ArrayRef<byte> InvertedLuminanceSource::getMatrix() const {
-  ArrayRef<byte> matrix = delegate->getMatrix();
+ArrayRef<Byte> InvertedLuminanceSource::getMatrix() const {
+  ArrayRef<Byte> matrix = delegate->getMatrix();
   int length = getWidth() * getHeight();
-  ArrayRef<byte> invertedMatrix(length);
+  ArrayRef<Byte> invertedMatrix(length);
   for (int i = 0; i < length; i++) {
-    invertedMatrix[i] = (byte) (255 - (matrix[i] & 0xFF));
+    invertedMatrix[i] = (Byte) (255 - (matrix[i] & 0xFF));
   }
   return invertedMatrix;
 }

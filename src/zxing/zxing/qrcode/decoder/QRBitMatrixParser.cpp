@@ -116,7 +116,7 @@ Version *BitMatrixParser::readVersion() {
   throw ReaderException("Could not decode version");
 }
 
-ArrayRef<byte> BitMatrixParser::readCodewords() {
+ArrayRef<Byte> BitMatrixParser::readCodewords() {
   Ref<FormatInformation> formatInfo = readFormatInformation();
   Version *version = readVersion();
 
@@ -138,7 +138,7 @@ ArrayRef<byte> BitMatrixParser::readCodewords() {
   //	cout << *functionPattern << endl;
 
   bool readingUp = true;
-  ArrayRef<byte> result(version->getTotalCodewords());
+  ArrayRef<Byte> result(version->getTotalCodewords());
   int resultOffset = 0;
   int currentByte = 0;
   int bitsRead = 0;
@@ -163,7 +163,7 @@ ArrayRef<byte> BitMatrixParser::readCodewords() {
           }
           // If we've made a whole byte, save it off
           if (bitsRead == 8) {
-            result[resultOffset++] = (byte)currentByte;
+            result[resultOffset++] = (Byte)currentByte;
             bitsRead = 0;
             currentByte = 0;
           }

@@ -24,20 +24,20 @@
 using namespace std;
 using namespace zxing;
 
-DecoderResult::DecoderResult(ArrayRef<byte> rawBytes,
+DecoderResult::DecoderResult(ArrayRef<Byte> rawBytes,
                              Ref<String> text,
-                             ArrayRef< ArrayRef<byte> >& byteSegments,
+                             ArrayRef< ArrayRef<Byte> >& byteSegments,
                              string const& ecLevel, string charSet) :
   rawBytes_(rawBytes),
   text_(text),
   byteSegments_(byteSegments),
   ecLevel_(ecLevel), charSet_(charSet) {}
 
-DecoderResult::DecoderResult(ArrayRef<byte> rawBytes,
+DecoderResult::DecoderResult(ArrayRef<Byte> rawBytes,
                              Ref<String> text)
   : rawBytes_(rawBytes), text_(text),charSet_("") {}
 
-ArrayRef<byte> DecoderResult::getRawBytes() {
+ArrayRef<Byte> DecoderResult::getRawBytes() {
   return rawBytes_;
 }
 

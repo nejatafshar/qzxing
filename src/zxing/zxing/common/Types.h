@@ -8,7 +8,7 @@
 
 namespace zxing {
 
-typedef unsigned char byte;
+typedef unsigned char Byte;
 typedef bool boolean;
 
 }

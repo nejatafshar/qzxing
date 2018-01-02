@@ -28,18 +28,18 @@ class GreyscaleLuminanceSource : public LuminanceSource {
 
 private:
   typedef LuminanceSource Super;
-  ArrayRef<byte> greyData_;
+  ArrayRef<Byte> greyData_;
   const int dataWidth_;
   const int dataHeight_;
   const int left_;
   const int top_;
 
 public:
-  GreyscaleLuminanceSource(ArrayRef<byte> greyData, int dataWidth, int dataHeight, int left,
+  GreyscaleLuminanceSource(ArrayRef<Byte> greyData, int dataWidth, int dataHeight, int left,
                            int top, int width, int height);
 
-  ArrayRef<byte> getRow(int y, ArrayRef<byte> row) const;
-  ArrayRef<byte> getMatrix() const;
+  ArrayRef<Byte> getRow(int y, ArrayRef<Byte> row) const;
+  ArrayRef<Byte> getMatrix() const;
 
   bool isRotateSupported() const {
     return true;
