@@ -400,7 +400,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
             if(res->getRawBytes())
             {
-                std::vector<byte> &tagData = res->getRawBytes()->values();
+                std::vector<Byte> &tagData = res->getRawBytes()->values();
                 if(tagData.size() > 0)
                     emit tagFound(QByteArray::fromRawData(reinterpret_cast<char*>(tagData.data()), tagData.size()));
             }
