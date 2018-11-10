@@ -30,7 +30,7 @@ namespace zxing {
 // be able to traverse the greyData correctly, which does not get
 // rotated.
 GreyscaleRotatedLuminanceSource::
-GreyscaleRotatedLuminanceSource(ArrayRef<Byte> greyData,
+GreyscaleRotatedLuminanceSource(ArrayRef<byte> greyData,
                                 int dataWidth, int dataHeight,
                                 int left, int top,
                                 int width, int height)
@@ -45,13 +45,13 @@ GreyscaleRotatedLuminanceSource(ArrayRef<Byte> greyData,
 }
 
 // The API asks for rows, but we're rotated, so we return columns.
-ArrayRef<Byte>
-GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<Byte> row) const {
+ArrayRef<byte>
+GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<byte> row) const {
   if (y < 0 || y >= getHeight()) {
     throw IllegalArgumentException("Requested row is outside the image.");
   }
   if (!row || row->size() < getWidth()) {
-    row = ArrayRef<Byte>(getWidth());
+    row = ArrayRef<byte>(getWidth());
   }
   int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
   using namespace std;
@@ -68,10 +68,10 @@ GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<Byte> row) const {
   return row;
 }
 
-ArrayRef<Byte> GreyscaleRotatedLuminanceSource::getMatrix() const {
-  ArrayRef<Byte> result (getWidth() * getHeight());
+ArrayRef<byte> GreyscaleRotatedLuminanceSource::getMatrix() const {
+  ArrayRef<byte> result (getWidth() * getHeight());
   for (int y = 0; y < getHeight(); y++) {
-    Byte* row = &result[y * getWidth()];
+    byte* row = &result[y * getWidth()];
     int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
     for (int x = 0; x < getWidth(); x++) {
       row[x] = greyData_[offset];

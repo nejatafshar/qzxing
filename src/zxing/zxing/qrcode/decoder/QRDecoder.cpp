@@ -43,7 +43,7 @@ Decoder::Decoder() :
   rsDecoder_(GenericGF::QR_CODE_FIELD_256) {
 }
 
-void Decoder::correctErrors(ArrayRef<Byte> codewordBytes, int numDataCodewords) {
+void Decoder::correctErrors(ArrayRef<byte> codewordBytes, int numDataCodewords) {
   int numCodewords = codewordBytes->size();
   ArrayRef<int> codewordInts(numCodewords);
   for (int i = 0; i < numCodewords; i++) {
@@ -59,7 +59,7 @@ void Decoder::correctErrors(ArrayRef<Byte> codewordBytes, int numDataCodewords) 
   }
 
   for (int i = 0; i < numDataCodewords; i++) {
-    codewordBytes[i] = (Byte)codewordInts[i];
+    codewordBytes[i] = (byte)codewordInts[i];
   }
 }
 
@@ -74,7 +74,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
 
 
   // Read codewords
-  ArrayRef<Byte> codewords(parser.readCodewords());
+  ArrayRef<byte> codewords(parser.readCodewords());
 
 
   // Separate into data blocks
@@ -86,18 +86,18 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   for (size_t i = 0; i < dataBlocks.size(); i++) {
     totalBytes += dataBlocks[i]->getNumDataCodewords();
   }
-  ArrayRef<Byte> resultBytes(totalBytes);
+  ArrayRef<byte> resultBytes(totalBytes);
   int resultOffset = 0;
 
 
   // Error-correct and copy data blocks together into a stream of bytes
   for (size_t j = 0; j < dataBlocks.size(); j++) {
     Ref<DataBlock> dataBlock(dataBlocks[j]);
-    ArrayRef<Byte> codewordBytes = dataBlock->getCodewords();
+    ArrayRef<byte> codewordBytes = dataBlock->getCodewords();
     int numDataCodewords = dataBlock->getNumDataCodewords();
     correctErrors(codewordBytes, numDataCodewords);
     for (int i = 0; i < numDataCodewords; i++) {
-      resultBytes[resultOffset++] = (Byte)codewordBytes[i];
+      resultBytes[resultOffset++] = (byte)codewordBytes[i];
     }
   }
 

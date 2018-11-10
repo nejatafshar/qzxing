@@ -3,7 +3,7 @@
 
 //values based on http://entropymine.com/imageworsener/grayscale/
 //round(0,2127*R)
-const Byte CameraImageWrapper::R_TO_GREYSCALE[256] =  {
+const byte CameraImageWrapper::R_TO_GREYSCALE[256] =  {
     0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4,
     5, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9,
     10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13, 13,
@@ -22,7 +22,7 @@ const Byte CameraImageWrapper::R_TO_GREYSCALE[256] =  {
 
 //values based on http://entropymine.com/imageworsener/grayscale/
 //round(0,7152*G)
-const Byte CameraImageWrapper::G_TO_GREYSCALE[256] = {
+const byte CameraImageWrapper::G_TO_GREYSCALE[256] = {
     0, 1, 1, 2, 3, 4, 4, 5, 6, 6, 7, 8, 9, 9, 10, 11, 11, 12, 13,
     14, 14, 15, 16, 16, 17, 18, 19, 19, 20, 21, 21, 22, 23, 24, 24,
     25, 26, 26, 27, 28, 29, 29, 30, 31, 31, 32, 33, 34, 34, 35,
@@ -44,7 +44,7 @@ const Byte CameraImageWrapper::G_TO_GREYSCALE[256] = {
 
 //values based on http://entropymine.com/imageworsener/grayscale/
 //round(0,0722*B)
-const Byte CameraImageWrapper::B_TO_GREYSCALE[256] = {
+const byte CameraImageWrapper::B_TO_GREYSCALE[256] = {
     0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -101,12 +101,12 @@ CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int m
         return new CameraImageWrapper(sourceImage);
 }
 
-ArrayRef<ArrayRef<Byte> > CameraImageWrapper::getOriginalImage()
+ArrayRef<ArrayRef<byte> > CameraImageWrapper::getOriginalImage()
 {
     return imageBytesPerRow;
 }
 
-ArrayRef<Byte> CameraImageWrapper::getRow(int y, ArrayRef<Byte> row) const
+ArrayRef<byte> CameraImageWrapper::getRow(int y, ArrayRef<byte> row) const
 {
     if(delegate)
         return delegate->getRow(y, row);
@@ -114,7 +114,7 @@ ArrayRef<Byte> CameraImageWrapper::getRow(int y, ArrayRef<Byte> row) const
         return getRowP(y, row);
 }
 
-ArrayRef<Byte> CameraImageWrapper::getMatrix() const
+ArrayRef<byte> CameraImageWrapper::getMatrix() const
 {
     if(delegate)
         return delegate->getMatrix();
@@ -162,24 +162,24 @@ Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
         return LuminanceSource::rotateCounterClockwise();
 }
 
-ArrayRef<Byte> CameraImageWrapper::getRowP(int y, ArrayRef<Byte> row) const
+ArrayRef<byte> CameraImageWrapper::getRowP(int y, ArrayRef<byte> row) const
 {
     int width = getWidth();
 
     if (row->size() != width)
-        row.reset(ArrayRef<Byte>(width));
+        row.reset(ArrayRef<byte>(width));
 
     Q_ASSERT(y >= 0 && y < getHeight());
 
     return imageBytesPerRow[y];
 }
 
-ArrayRef<Byte> CameraImageWrapper::getMatrixP() const
+ArrayRef<byte> CameraImageWrapper::getMatrixP() const
 {
     return imageBytes;
 }
 
-Byte CameraImageWrapper::gray(unsigned int r, unsigned int g, unsigned int b)
+byte CameraImageWrapper::gray(unsigned int r, unsigned int g, unsigned int b)
 {
     //the values are not masked with (x & 0xFF) because functions qRed, qGreen, qBlue already do it
     return R_TO_GREYSCALE[r] + G_TO_GREYSCALE[g] + B_TO_GREYSCALE[b];
@@ -190,18 +190,18 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
     bool needsConvesionToGrayscale = origin.format() != QImage::Format_Grayscale8;
 
     QRgb pixel;
-    Byte pixelGrayscale;
+    byte pixelGrayscale;
 
     const int width = getWidth();
     const int height = getHeight();
 
-    imageBytes = ArrayRef<Byte>(height*width);
-    imageBytesPerRow = ArrayRef<ArrayRef<Byte>>(height);
-    Byte* m = &imageBytes[0];
+    imageBytes = ArrayRef<byte>(height*width);
+    imageBytesPerRow = ArrayRef<ArrayRef<byte>>(height);
+    byte* m = &imageBytes[0];
 
     for(int j=0; j<height; j++)
     {
-        ArrayRef<Byte> line(width);
+        ArrayRef<byte> line(width);
         for(int i=0; i<width; i++)
         {
             pixel = origin.pixel(i,j);
@@ -218,7 +218,7 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
 #else
         memcpy(m, &line[0], width);
 #endif
-        m += width * sizeof(Byte);
+        m += width * sizeof(byte);
     }
 }
 

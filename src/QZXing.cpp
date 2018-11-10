@@ -403,7 +403,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
             if(res->getRawBytes())
             {
-                std::vector<Byte> &tagData = res->getRawBytes()->values();
+                std::vector<byte> &tagData = res->getRawBytes()->values();
                 if(tagData.size() > 0)
                     emit tagFound(QByteArray::fromRawData(reinterpret_cast<char*>(tagData.data()), tagData.size()));
             }
@@ -521,7 +521,7 @@ QImage QZXing::encodeData(const QString& data,
                              qrcode::ErrorCorrectionLevel::L)));
 
             Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
-            const std::vector< std::vector <zxing::Byte> >& bytes = bytesRef->getArray();
+            const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
             image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
             for(int i=0; i<bytesRef->getWidth(); i++)
                 for(int j=0; j<bytesRef->getHeight(); j++)

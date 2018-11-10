@@ -77,7 +77,7 @@ protected:
                                         int numDataBytes,
                                         int numRSBlocks);
 
-  static ArrayRef<Byte> generateECBytes(const std::vector<Byte> &dataBytes, int numEcBytesInBlock);
+  static ArrayRef<byte> generateECBytes(const std::vector<byte> &dataBytes, int numEcBytesInBlock);
 
   static void appendNumericBytes(const std::string& content, BitArray& bits);
 

@@ -22,32 +22,32 @@ size_t ByteMatrix::getWidth() const
     return width_;
 }
 
-Byte ByteMatrix::get(size_t x, size_t y) const
+byte ByteMatrix::get(size_t x, size_t y) const
 {
     return bytes_[y][x];
 }
 
-std::vector< std::vector<Byte> > ByteMatrix::getArray() const
+std::vector< std::vector<byte> > ByteMatrix::getArray() const
 {
     return bytes_;
 }
 
-void ByteMatrix::set(size_t x, size_t y, const Byte value)
+void ByteMatrix::set(size_t x, size_t y, const byte value)
 {
     bytes_[y][x] = value;
 }
 
 void ByteMatrix::set(size_t x, size_t y, size_t value)
 {
-    bytes_[y][x] = (Byte) value;
+    bytes_[y][x] = (byte) value;
 }
 
 void ByteMatrix::set(size_t x, size_t y, bool value)
 {
-    bytes_[y][x] = (Byte) (value ? 1 : 0);
+    bytes_[y][x] = (byte) (value ? 1 : 0);
 }
 
-void ByteMatrix::clear(const Byte value)
+void ByteMatrix::clear(const byte value)
 {
     for (size_t y = 0; y < height_; y++) {
         for (size_t x = 0; x < width_; x++) {
@@ -60,7 +60,7 @@ const std::string ByteMatrix::toString() const
 {
     std::stringstream result;// = new StringBuilder(2 * width * height + 2);
     for (size_t y = 0; y < height_; y++) {
-        const std::vector<Byte>& bytesY = bytes_[y];
+        const std::vector<byte>& bytesY = bytes_[y];
         for (size_t x = 0; x < width_; x++) {
             switch (bytesY[x]) {
             case 0:
