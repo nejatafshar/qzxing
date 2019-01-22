@@ -157,6 +157,7 @@ protected:
     static int generateRandomNumber(int range);
 
 public:
+    virtual ~TestCase() {}
     virtual void execute()=0;
 };
 
