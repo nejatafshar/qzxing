@@ -6,17 +6,20 @@
 #include <zxing/MultiFormatReader.h>
 #include <zxing/DecodeHints.h>
 #include <zxing/ResultMetadata.h>
+#include <zxing/common/detector/WhiteRectangleDetector.h>
 #include "CameraImageWrapper.h"
 #include "ImageHandler.h"
 #include <QTime>
 #include <QUrl>
 #include <QFileInfo>
-#include <zxing/qrcode/encoder/Encoder.h>
-#include <zxing/qrcode/ErrorCorrectionLevel.h>
-#include <zxing/common/detector/WhiteRectangleDetector.h>
 #include <QColor>
 #include <QtCore/QTextCodec>
 #include <QDebug>
+
+#ifdef ENABLE_ENCODER_QR_CODE
+#include <zxing/qrcode/encoder/Encoder.h>
+#include <zxing/qrcode/ErrorCorrectionLevel.h>
+#endif // ENABLE_ENCODER_QR_CODE
 
 #if QT_VERSION >= 0x040700 && QT_VERSION < 0x050000
 #include <QtDeclarative>
@@ -580,17 +583,20 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
 #endif //QZXING_QML
 }
 
+#ifdef ENABLE_ENCODER_GENERIC
 QImage QZXing::encodeData(const QString& data,
                           const EncoderFormat encoderFormat,
                           const QSize encoderImageSize,
                           const EncodeErrorCorrectionLevel errorCorrectionLevel,
-                          const bool border)
+                          const bool border,
+                          const bool transparent)
 {
     return encodeData(data,
                       QZXingEncoderConfig(encoderFormat,
                                           encoderImageSize,
                                           errorCorrectionLevel,
-                                          border));
+                                          border,
+                                          transparent));
 }
 
 QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encoderConfig)
@@ -599,6 +605,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
 
     try {
         switch (encoderConfig.format) {
+#ifdef ENABLE_ENCODER_QR_CODE
         case EncoderFormat_QR_CODE:
         {
             Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(
@@ -615,8 +622,8 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
             const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
             const int width = int(bytesRef->getWidth()) + (encoderConfig.border ? 2 : 0);
             const int height = int(bytesRef->getHeight()) + (encoderConfig.border ? 2 : 0);
-            const QRgb black = qRgb(0, 0, 0);
-            const QRgb white = qRgb(255, 255, 255);
+            const QRgb black = qRgba(0, 0, 0, encoderConfig.transparent ? 0 : 255);
+            const QRgb white = qRgba(255, 255, 255, 255);
 
             image = QImage(width, height, QImage::Format_ARGB32);
             image.fill(white);
@@ -634,6 +641,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
             image = image.scaled(encoderConfig.imageSize);
             break;
         }
+#endif // ENABLE_ENCODER_QR_CODE
         case EncoderFormat_INVALID:
             break;
         }
@@ -643,6 +651,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
 
     return image;
 }
+#endif // ENABLE_ENCODER_GENERIC
 
 int QZXing::getProcessTimeOfLastDecoding()
 {
