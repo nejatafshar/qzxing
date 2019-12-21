@@ -412,6 +412,7 @@ qzxing_multimedia {
     CONFIG += qzxing_qml
 
     DEFINES += QZXING_MULTIMEDIA
+	PRL_EXPORT_DEFINES += QZXING_MULTIMEDIA
 
     HEADERS += \
         $$PWD/QZXingFilter.h
@@ -425,6 +426,7 @@ qzxing_qml {
     greaterThan(QT_MAJOR_VERSION, 4): QT += quick
 
     DEFINES += QZXING_QML
+	PRL_EXPORT_DEFINES += QZXING_QML
 
     HEADERS +=  \
         $$PWD/QZXingImageProvider.h
