@@ -51,9 +51,9 @@ struct QZXingEncoderConfig;
   * Regarding DecoderFormat, by default all of those are enabled
   */
 class
-        #ifndef DISABLE_LIBRARY_FEATURES
-        QZXINGSHARED_EXPORT
-        #endif
+//        #ifndef DISABLE_LIBRARY_FEATURES
+//        QZXINGSHARED_EXPORT
+//        #endif
         QZXing : public QObject {
 
     Q_OBJECT
