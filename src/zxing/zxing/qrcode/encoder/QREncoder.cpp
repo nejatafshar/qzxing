@@ -11,7 +11,7 @@
 #include <limits>
 #include "MatrixUtil.h"
 #include <string>
-#include "zxing/common/StringUtils.h"
+#include <zxing/common/StringUtils.h>
 #include <QDebug>
 #include <QString>
 
@@ -416,6 +416,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         message += " and ";
         message += zxing::common::StringUtils::intToStr(result->getSizeInBytes());
         message += " differ.";
+        delete result;
         throw WriterException(message.c_str());
     }
 
